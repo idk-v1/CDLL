@@ -5,7 +5,7 @@ for file in os.listdir():
 	if file.endswith(".dll"):
 		name = file
 dll = ctypes.CDLL("./" + name)
-print(name, "exited with code {idk how to get the return code}")
+print(name, "exited with code", dll)
 print("Press any key to continue...")
 msvcrt.getch()
 del dll

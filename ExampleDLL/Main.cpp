@@ -1,70 +1,55 @@
 #include "DLL.h"
+#include <iostream>
+#include <SFML/Window.hpp>
+#include <SFML/Network.hpp>
 
-LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+void networkTest();
+
+
+void windowTest();
+
 
 int main()
 {
-    HINSTANCE hInstance = 0;
-    int nCmdShow = 1;
+	networkTest();
 
-    const wchar_t CLASS_NAME[] = L"Example Win32 Window";
+	windowTest();
 
-    WNDCLASS wc = { };
-
-    wc.lpfnWndProc = WindowProc;
-    wc.hInstance = hInstance;
-    wc.lpszClassName = CLASS_NAME;
-
-    RegisterClass(&wc);
-
-    HWND hwnd = CreateWindowEx(
-        0,
-        CLASS_NAME,
-        L"Example Win32 Window",
-        WS_OVERLAPPEDWINDOW,
-
-        CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-
-        NULL,   
-        NULL,
-        hInstance,
-        NULL
-    );
-
-    if (hwnd == NULL)
-        return 0;
-
-    ShowWindow(hwnd, nCmdShow);
-
-    MSG msg = {};
-    while (GetMessage(&msg, NULL, 0, 0) > 0)
-    {
-        TranslateMessage(&msg);
-        DispatchMessage(&msg);
-    }
-
-    return 0;
+	return 0;
 }
 
-LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+void networkTest()
 {
-    switch (uMsg)
-    {
-    case WM_DESTROY:
-        PostQuitMessage(0);
-        return 0;
+	std::cout << "Network\n";
 
-    case WM_PAINT:
-    {
-        PAINTSTRUCT ps;
-        HDC hdc = BeginPaint(hwnd, &ps);
+	sf::UdpSocket udpS, udpR;
+	sf::Packet packS, packR;
+	sf::IpAddress ip("Localhost");
+	unsigned short port = 69;
+	std::string test;
 
-        FillRect(hdc, &ps.rcPaint, (HBRUSH)(COLOR_WINDOW + 1));
+	udpR.bind(port, ip);
 
-        EndPaint(hwnd, &ps);
-    }
-    return 0;
+	packS << "amogus sus";
+	udpS.send(packS, ip, port);
 
-    }
-    return DefWindowProc(hwnd, uMsg, wParam, lParam);
+	udpR.receive(packR, ip, port);
+	packR >> test;
+	std::cout << "Recieved: \"" << test << "\" From localhost\n";
+}
+
+
+void windowTest()
+{
+	std::cout << "Window\n";
+
+	sf::Window win(sf::VideoMode(800, 600), "");
+	while (win.isOpen())
+	{
+		sf::Event e;
+		while (win.pollEvent(e))
+			if (!e.type)
+				win.close();
+	}
 }

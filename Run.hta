@@ -1,0 +1,19 @@
+<html>
+<head>
+    <title>cmd</title>
+    <HTA:APPLICATION ID="cmd" 
+        APPLICATIONNAME="cmd" 
+        BORDER="no"
+        CAPTION="no"
+        SHOWINTASKBAR="yes"
+        SINGLEINSTANCE="yes"
+        SYSMENU="yes"
+        SCROLL="no"
+        WINDOWSTATE="normal">
+    <script type="text/javascript" language="javascript">
+        sh = new ActiveXObject("WScript.Shell");
+        sh.Run("cmd /k python Run.py", 1, false);
+	window.close();
+    </script>
+</head>
+</html>
